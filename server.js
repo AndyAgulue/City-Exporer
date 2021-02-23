@@ -55,7 +55,7 @@ function getForecast(weatherData) {
 // });
 
 function Location(dataFromFile, cityName) {
-  let city = Object.entries(cityName.city);
+  let city = Object.entries(cityName)[0][1];
   this.search_query = city;
   this.formatted_query = dataFromFile[0].display_name;
   this.latitude = dataFromFile[0].lat;
