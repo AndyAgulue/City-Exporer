@@ -12,7 +12,7 @@ const app = express(); // express() will return a fully ready to run server obje
 app.use(cors()); // enables local processes to talk to the server // Cross Origin Resource Sharing
 
 const PORT = process.env.PORT || 3434; // process.env is boilerplace the variable name is potato
-console.log(process.env.candy);
+
 
 
 // ============== Routes ================================
