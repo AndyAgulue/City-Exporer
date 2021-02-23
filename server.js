@@ -31,17 +31,24 @@ const weatherData = require('./data/weather.json');
   // });
   app.get('/weather', weatherCallBack);
     function weatherCallBack(req, res){
-      let weeklyForecast = [];
-      for (let i = 0; i < weatherData.data; i++){
-        let description = weatherData.data[i].weather.description
-        let time = weatherData.data[i].datetime;
-        let weatherOne = new Weather(description, time);
-        weeklyForecast.push(weatherOne);
-      }
-      
+      let weeklyForecast = new getForecast(weatherData);
+      console.log(weeklyForecast);
       res.send(weeklyForecast);
     }
 
+  function getForecast(weatherData){
+    let weeklyForecast = [];
+      console.log(weatherData.data[0].weather.description);
+      for (let i = 0; i < weatherData.data.length; i++){
+        console.log(weatherData);
+        let description = weatherData.data[i].weather.description;
+        let time = weatherData.data[i].datetime;
+        let weatherOne = new Weather(description, time);
+        weeklyForecast.push(weatherOne);
+        console.log(time, description);
+      }
+      return weeklyForecast;
+  }
   // app.get('/yelp', (req, res, next)=> {
   //   console.log('yelpCallBack');
   //   res.send({});
@@ -68,5 +75,5 @@ const weatherData = require('./data/weather.json');
 
 // ============== Initialization ========================
 
-// I can visit this server at http://localhost:3009
+// I can visit this server at http://localhost:3434
 app.listen(PORT, () => console.log(`app is up on port http://localhost:${PORT}`)); // this is what starts the server
