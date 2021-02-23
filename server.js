@@ -16,7 +16,46 @@ console.log(process.env.candy);
 
 
 // ============== Routes ================================
+const locationData = require('./data/location.json');
+const weatherData = require('./data/weather.json');
 
+  app.get('/location', locationCallBack);
+    function locationCallBack(req, res){
+      let locationOne = new Location(locationData, req.query);
+      res.send(locationOne);
+    }
+    
+  // app.get('/movies', (req, res, next)=> {
+  //   console.log('moviesCallBack');
+  //   res.send({});
+  // });
+  app.get('./data/weather', weatherCallBack);
+    function weatherCallBack(req, res){
+      let weatherOne = (weatherData, req.query);
+      res.send(weatherOne);
+    }
+
+  // app.get('/yelp', (req, res, next)=> {
+  //   console.log('yelpCallBack');
+  //   res.send({});
+  // });
+  // app.get('/parks', (req, res, next)=> {
+  //   console.log('parksCallBack');
+  //   res.send({});
+  // });
+
+  function Location(dataFromFile, cityName){
+    let city = Object.entries(cityName)[0][1];
+    console.log(city);
+    this.searchQuery = city;
+    this.formatted_query = dataFromFile[0].display_name;
+    this.latitude = dataFromFile[0].lat;
+    this.longitude = dataFromFile[0].lon;
+  }
+
+  // function Weather(n ){
+  //   this.
+  // }
 
 
 // ============== Initialization ========================
