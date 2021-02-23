@@ -29,10 +29,17 @@ const weatherData = require('./data/weather.json');
   //   console.log('moviesCallBack');
   //   res.send({});
   // });
-  app.get('./data/weather', weatherCallBack);
+  app.get('/weather', weatherCallBack);
     function weatherCallBack(req, res){
-      let weatherOne = (weatherData, req.query);
-      res.send(weatherOne);
+      let weeklyForecast = [];
+      for (let i = 0; i < weatherData.data; i++){
+        let description = weatherData.data[i].weather.description
+        let time = weatherData.data[i].datetime;
+        let weatherOne = new Weather(description, time);
+        weeklyForecast.push(weatherOne);
+      }
+      
+      res.send(weeklyForecast);
     }
 
   // app.get('/yelp', (req, res, next)=> {
@@ -53,9 +60,10 @@ const weatherData = require('./data/weather.json');
     this.longitude = dataFromFile[0].lon;
   }
 
-  // function Weather(n ){
-  //   this.
-  // }
+  function Weather(description, time){
+    this.description = description;
+    this.time = time;
+  }
 
 
 // ============== Initialization ========================
