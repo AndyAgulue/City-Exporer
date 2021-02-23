@@ -32,21 +32,19 @@ const weatherData = require('./data/weather.json');
   app.get('/weather', weatherCallBack);
     function weatherCallBack(req, res){
       let weeklyForecast = new getForecast(weatherData);
-      console.log(weeklyForecast);
       res.send(weeklyForecast);
     }
 
   function getForecast(weatherData){
     let weeklyForecast = [];
-      console.log(weatherData.data[0].weather.description);
+      // console.log(weatherData.data[0].weather.description);
       for (let i = 0; i < weatherData.data.length; i++){
-        console.log(weatherData);
         let description = weatherData.data[i].weather.description;
         let time = weatherData.data[i].datetime;
-        let weatherOne = new Weather(description, time);
-        weeklyForecast.push(weatherOne);
-        console.log(time, description);
+        weeklyForecast.push(new Weather(description, time));
+        console.log('description' + description);
       }
+      // console.log(weeklyForecast);
       return weeklyForecast;
   }
   // app.get('/yelp', (req, res, next)=> {
