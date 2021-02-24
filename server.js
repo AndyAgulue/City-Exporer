@@ -1,10 +1,9 @@
 // ============== Packages ==============================
 
 const express = require('express');
-const cors = require('cors'); // just kinda works and we need it
-// If this line of code comes, delete it const { response } = require('express');
+const cors = require('cors');
 require('dotenv').config(); // read the `.env` file's saved env variables AFTER reading the terminal's real env's variables
-
+const superagent = require('superagent');
 
 // ============== App ===================================
 
@@ -16,13 +15,23 @@ const PORT = process.env.PORT || 3434; // process.env is boilerplace the variabl
 
 
 // ============== Routes ================================
-const locationData = require('./data/location.json');
-const weatherData = require('./data/weather.json');
+//const locationData = require('./data/location.json');
+//const weatherData = require('./data/weather.json');
+//const { response } = require('express');
+
 
 app.get('/location', locationCallBack);
 function locationCallBack(req, res) {
-  let locationOne = new Location(locationData, req.query);
-  res.send(locationOne);
+  const city = req.query.city;
+  const url = `https://us1.locationiq.com/v1/search.php?key=${process.env.GEOCODE_API_KEY}&q=${city}&format=json`;
+  superagent.get(url)
+    .then(whatComesBack => {
+      let locationOne = new Location(whatComesBack.body, req.query.city);
+      res.send(locationOne);
+    })
+    .catch(error => {
+      'Not functioning properly';
+    });
 }
 
 // app.get('/movies', (req, res, next)=> {
@@ -32,8 +41,15 @@ function locationCallBack(req, res) {
 
 app.get('/weather', weatherCallBack);
 function weatherCallBack(req, res) {
-  let weeklyForecast = new getForecast(weatherData);
-  res.send(weeklyForecast);
+  const url = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${req.query.latitude}&lon=${req.query.longitude}&key=${process.env.WEATHER_API_KEY}&days=8
+  `;
+  superagent.get(url).then(whatComesBack => {
+    let weeklyForecast = new getForecast(whatComesBack.body);
+    res.send(weeklyForecast);
+  })
+    .catch(error => {
+      'Not functioning properly';
+    });
 }
 
 function getForecast(weatherData) {
@@ -54,8 +70,8 @@ function getForecast(weatherData) {
 // });
 
 function Location(dataFromFile, cityName) {
-  let city = Object.entries(cityName)[0][1];
-  this.search_query = city;
+  //let city = Object.entries(cityName)[0][1];
+  this.search_query = cityName;
   this.formatted_query = dataFromFile[0].display_name;
   this.latitude = dataFromFile[0].lat;
   this.longitude = dataFromFile[0].lon;
