@@ -40,10 +40,9 @@ function getForecast(weatherData) {
   function parseWeather(weatherItem) {
     let description = weatherItem.weather.description;
     let time = weatherItem.datetime;
-    return (new Weather(description, time));
+    return new Weather(description, time);
   }
-  let weeklyForecast = weatherData.data.map(parseWeather);
-  return weeklyForecast;
+  return weatherData.data.map(parseWeather);
 }
 // app.get('/yelp', (req, res, next)=> {
 //   console.log('yelpCallBack');
