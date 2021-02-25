@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const superagent = require('superagent');
 require('dotenv').config(); 
+const pg = require('pg');
 
 
 
@@ -11,9 +12,10 @@ require('dotenv').config();
 
 const app = express(); // express() will return a fully ready to run server object
 app.use(cors()); // enables local processes to talk to the server // Cross Origin Resource Sharing
-
 const PORT = process.env.PORT || 3434; // process.env is boilerplace the variable name is potato
 
+const client = new pg.Client(process.env.DATABASE_URL);
+client.on('error', err => console.log(err));
 
 
 // ============== Routes ================================
@@ -120,4 +122,9 @@ function Park(name, address, fee, description, url) {
 // ============== Initialization ========================
 
 // I can visit this server at http://localhost:3434
-app.listen(PORT, () => console.log(`app is up on port http://localhost:${PORT}`));
+client.connect()
+  .then(()=>{
+    app.listen(PORT, () => console.log(`app is up on port http://localhost:${PORT}`));
+  });
+
+
