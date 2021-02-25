@@ -2,8 +2,10 @@
 
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config(); // read the `.env` file's saved env variables AFTER reading the terminal's real env's variables
 const superagent = require('superagent');
+require('dotenv').config(); 
+
+
 
 // ============== App ===================================
 
@@ -70,7 +72,6 @@ function getForecast(weatherData) {
 // });
 
 function Location(dataFromFile, cityName) {
-  //let city = Object.entries(cityName)[0][1];
   this.search_query = cityName;
   this.formatted_query = dataFromFile[0].display_name;
   this.latitude = dataFromFile[0].lat;
@@ -83,9 +84,40 @@ function Weather(description, time) {
 }
 
 
+const parkKey = process.env.PARKS_API_KEY;
+app.get('/parks', parkCallBack);
+function parkCallBack(req, res) {
+  const url = `https://developer.nps.gov/api/v1/parks?q=${req.query.search_query}&api_key=${parkKey}`;
+  superagent.get(url)
+    .then((result => {
+      let nearestParks = new ParkList(result.body.data);
+      res.send(nearestParks);
+    }))
+    .catch(error => {
+      res.send("Broken! Try again later!");
+    });
+}
+
+function ParkList(parkData) {
+  return parkData.map(data => {
+    return new Park(data.fullName,
+      data.addresses[0].line1,
+      data.entranceFees[0].cost,
+      data.description,
+      data.url);
+  });
+}
+
+function Park(name, address, fee, description, url) {
+  this.name = name;
+  this.address = address;
+  this.fee = fee;
+  this.description = description;
+  this.url = url;
+}
 
 
 // ============== Initialization ========================
 
 // I can visit this server at http://localhost:3434
-app.listen(PORT, () => console.log(`app is up on port http://localhost:${PORT}`)); // this is what starts the server
+app.listen(PORT, () => console.log(`app is up on port http://localhost:${PORT}`));
