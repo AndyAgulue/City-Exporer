@@ -1,4 +1,4 @@
-DROP TABLE city_explorer_table;
+--DROP TABLE city_explorer_table;
 
 CREATE TABLE city_explorer_table (
   id  SERIAL PRIMARY KEY,
